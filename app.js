@@ -91,6 +91,7 @@
   function search(query) { const result=modules.filter(m=>normalize(m[2]+' '+m[3]).includes(normalize(query)));$('#main').innerHTML=`<div class="page-head"><div><div class="crumb">مساحة العمل / البحث</div><h1>نتائج البحث</h1><p class="page-description">ابحث عن الصفحات والعمليات المتاحة في التجربة.</p></div></div><p class="search-count">${result.length} نتائج عن «${escape(query)}»</p><div class="search-results">${result.length ? result.map(m=>`<a class="card search-result" href="#${m[0]}"><span class="metric-icon">${m[1]}</span><div><h2>${m[2]}</h2><p>${m[3]}</p></div></a>`).join('') : '<div class="card empty"><strong>لا توجد صفحات مطابقة</strong>جرّب: فواتير، مخازن، موظفين أو تقارير.</div>'}</div>`; }
   function route() {
     const hash=location.hash.slice(1)||'dashboard';let [id,query]=hash.split('?');
+    if(window.BizlinkExplorer?.renderHash(location.hash)) { setMenu(false); if ($('#record-dialog').open) $('#record-dialog').close(); return; }
     if(id!=='search' && !modules.some(m=>m[0]===id)) { location.replace('#dashboard');return; }
     currentRoute=id;filterText='';filterStatus='';page=1;
     $$('.nav-link').forEach(a=>{const active=a.getAttribute('href')==='#'+id;a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
@@ -98,6 +99,8 @@
     if ($('#record-dialog').open) $('#record-dialog').close();
     if(id==='search') search(new URLSearchParams(query).get('q')||'');
     else ({dashboard,invoices:()=>tablePage('invoices',invoiceRows(),invoiceColumns,overviewMetrics()),inventory,purchases,accounts,employees,payroll,crm,reports})[id]();
+    if(id==='search' && window.BizlinkExplorer) $('#main').insertAdjacentHTML('beforeend',window.BizlinkExplorer.searchAll(new URLSearchParams(query).get('q')||''));
+    if(id==='dashboard' && window.BizlinkCatalog) $('#main').insertAdjacentHTML('afterbegin','<a class="catalog-home-link card" href="#catalog"><span class="metric-icon">▦</span><div><strong>استكشف كل صفحات المشروع</strong><small>'+window.BizlinkCatalog.screens.length+' شاشة ونموذج في ١٢ قسمًا، مع الحقول والإجراءات التجريبية</small></div><b>افتح الدليل ←</b></a>');
     document.title=`${id==='search'?'البحث':modules.find(m=>m[0]===id)[2]} | BizLink Demo`;
     window.scrollTo?.({top:0,behavior:'instant'});entrance($('#main'));
   }
@@ -137,7 +140,7 @@
   $('#close-dialog').addEventListener('click',()=>$('#record-dialog').close());
   $('#record-dialog').addEventListener('close',()=>{if(returnFocus?.isConnected)returnFocus.focus();});
   $('#record-dialog').addEventListener('click',e=>{if(e.target!==e.currentTarget)return;const r=e.currentTarget.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.currentTarget.close();});
-  $('#reset-demo').addEventListener('click',()=>{openDialog('إعادة ضبط التجربة',`<div class="dialog-content"><p class="reset-note">سيتم مسح الفواتير التي أضفتها في هذه التجربة من متصفحك. ستظل البيانات التجريبية الأساسية متاحة.</p></div><div class="dialog-actions"><button class="btn" data-close>رجوع</button><button class="btn btn-danger" id="confirm-reset">إعادة ضبط البيانات التجريبية</button></div>`);$('#confirm-reset').addEventListener('click',()=>{saved=[];invoices=invoiceSeeds.slice();try{localStorage.removeItem(storageKey);}catch(_){}$('#record-dialog').close();route();toast('تمت إعادة ضبط التجربة.');});});
+  $('#reset-demo').addEventListener('click',()=>{openDialog('إعادة ضبط التجربة',`<div class="dialog-content"><p class="reset-note">سيتم مسح الفواتير وسجلات محاكاة الشاشات التي أضفتها في هذه التجربة من متصفحك. ستظل البيانات التجريبية الأساسية متاحة.</p></div><div class="dialog-actions"><button class="btn" data-close>رجوع</button><button class="btn btn-danger" id="confirm-reset">إعادة ضبط البيانات التجريبية</button></div>`);$('#confirm-reset').addEventListener('click',()=>{saved=[];invoices=invoiceSeeds.slice();window.BizlinkExplorer?.reset();try{localStorage.removeItem(storageKey);}catch(_){}$('#record-dialog').close();route();toast('تمت إعادة ضبط التجربة.');});});
   let searchTimer;
   $('#global-search').addEventListener('input',e=>{clearTimeout(searchTimer);const q=e.target.value.trim();searchTimer=setTimeout(()=>{location.hash=q?'search?q='+encodeURIComponent(q):'dashboard';},180);});
   $('#global-search').addEventListener('keydown',e=>{if(e.key==='Enter'){clearTimeout(searchTimer);location.hash='search?q='+encodeURIComponent(e.target.value.trim());}});
