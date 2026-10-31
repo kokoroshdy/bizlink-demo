@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="جرّب BizLink ERP: مساحة عمل مترابطة للمبيعات والمخزون والحسابات وشؤون العاملين، ببيانات تجريبية.">
+  <meta name="theme-color" content="#14283f">
+  <title>BizLink ERP — تجربة تفاعلية</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">انتقل للمحتوى</a>
+  <header class="topbar">
+    <div class="brand-group"><button class="icon-btn" id="menu-toggle" aria-label="فتح القائمة" aria-controls="sidebar" aria-expanded="false">☰</button><a class="brand" href="#dashboard"><span class="brand-mark">b<span>.</span></span><span>BizLink<small>مساحة العمل</small></span></a></div>
+    <label class="global-search"><span aria-hidden="true">⌕</span><input id="global-search" type="search" placeholder="ابحث عن صفحة أو عملية…" aria-label="ابحث في صفحات النظام"><kbd>Ctrl K</kbd></label>
+    <div class="account"><span class="demo-pill"><i></i> نسخة تجريبية</span><span class="avatar">ز</span><span class="account-label">أهلًا، زائر<small>استكشف مساحة عملك</small></span></div>
+  </header>
+  <button class="backdrop" id="backdrop" aria-label="إغلاق القائمة" hidden></button>
+  <aside class="sidebar" id="sidebar" aria-label="القائمة الرئيسية">
+    <div class="nav-caption">مساحة العمل <span>●</span></div>
+    <nav id="navigation"></nav>
+    <div class="sidebar-foot"><span class="mini-mark">b.</span><strong>كل أعمالك، في مكان واحد</strong><p>جرّب الواجهات بحرية.<br>البيانات هنا توضيحية بالكامل.</p><button id="reset-demo">إعادة ضبط التجربة ↻</button></div>
+  </aside>
+  <div class="workspace">
+    <div class="demo-notice"><span>✦</span><p><strong>أنت في مساحة التجربة.</strong> استكشف الصفحات وأضف فاتورة؛ التغييرات محفوظة في متصفحك فقط.</p><a href="#invoices">جرّب الفواتير ←</a></div>
+    <main id="main" tabindex="-1"></main>
+    <footer><span><strong>BizLink</strong> — مساحة عمل أكثر ترابطًا</span><span>عرض تفاعلي · بيانات تجريبية · لا يحتاج تسجيل دخول</span></footer>
+  </div>
+  <dialog id="record-dialog" aria-labelledby="dialog-title"><div class="dialog-head"><div><span class="eyebrow">BIZLINK WORKSPACE</span><h2 id="dialog-title"></h2></div><button class="icon-btn" id="close-dialog" aria-label="إغلاق">✕</button></div><div id="dialog-body"></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
