@@ -101,6 +101,7 @@
     else ({dashboard,invoices:()=>tablePage('invoices',invoiceRows(),invoiceColumns,overviewMetrics()),inventory,purchases,accounts,employees,payroll,crm,reports})[id]();
     if(id==='search' && window.BizlinkExplorer) $('#main').insertAdjacentHTML('beforeend',window.BizlinkExplorer.searchAll(new URLSearchParams(query).get('q')||''));
     if(id==='dashboard' && window.BizlinkCatalog) $('#main').insertAdjacentHTML('afterbegin','<a class="catalog-home-link card" href="#catalog"><span class="metric-icon">▦</span><div><strong>استكشف كل صفحات المشروع</strong><small>'+window.BizlinkCatalog.screens.length+' شاشة ونموذج في ١٢ قسمًا، مع الحقول والإجراءات التجريبية</small></div><b>افتح الدليل ←</b></a>');
+    window.BizlinkNavigation?.sync(location.hash);
     document.title=`${id==='search'?'البحث':modules.find(m=>m[0]===id)[2]} | BizLink Demo`;
     window.scrollTo?.({top:0,behavior:'instant'});entrance($('#main'));
   }
@@ -133,6 +134,7 @@
   $('#navigation').innerHTML=modules.map(([id,icon,label])=>`<a class="nav-link" href="#${id}"><span class="nav-icon" aria-hidden="true">${icon}</span>${label}<span class="nav-arrow" aria-hidden="true">‹</span></a>`).join('');
   $('#menu-toggle').addEventListener('click',()=>{if(matchMedia('(max-width: 1050px)').matches)setMenu(!document.body.classList.contains('nav-open'));else{const hidden=document.body.classList.toggle('nav-collapsed');$('#menu-toggle').setAttribute('aria-expanded',String(!hidden));}});
   $('#backdrop').addEventListener('click',()=>setMenu(false));
+  window.addEventListener('bizlink:navigate',()=>{if(matchMedia('(max-width: 1050px)').matches){setMenu(false);$('#main').focus();}});
   $('.skip').addEventListener('click',e=>{e.preventDefault();$('#main').focus();$('#main').scrollIntoView?.();});
   window.addEventListener('resize',()=>setMenu(false));
   window.addEventListener('hashchange',route);
